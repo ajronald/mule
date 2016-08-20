@@ -178,7 +178,7 @@ public class RestServiceWrapper extends AbstractComponent {
     endpointBuilder.setExchangePattern(REQUEST_RESPONSE);
     OutboundEndpoint outboundEndpoint = endpointBuilder.buildOutboundEndpoint();
 
-    MuleEventContext eventContext = new DefaultMuleEventContext(event);
+    MuleEventContext eventContext = new DefaultMuleEventContext(flowConstruct, event);
     MuleEvent result =
         new DefaultMuleEvent(event.getExecutionContext(),
                              muleContext.getClient().send(outboundEndpoint.getEndpointURI().toString(),
