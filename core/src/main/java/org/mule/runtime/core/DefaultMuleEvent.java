@@ -11,6 +11,7 @@ import static org.mule.runtime.core.api.config.MuleProperties.MULE_FORCE_SYNC_PR
 import static org.mule.runtime.core.api.config.MuleProperties.MULE_METHOD_PROPERTY;
 import static org.mule.runtime.core.message.Correlation.NO_CORRELATION;
 import static org.mule.runtime.core.util.SystemUtils.getDefaultEncoding;
+
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.core.api.DefaultMuleException;
 import org.mule.runtime.core.api.MessageExecutionContext;
@@ -41,7 +42,6 @@ import org.mule.runtime.core.util.store.DeserializationPostInitialisable;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -511,6 +511,11 @@ public class DefaultMuleEvent implements MuleEvent, DeserializationPostInitialis
   @Override
   public FlowConstruct getFlowConstruct() {
     return flowConstruct;
+  }
+
+  @Override
+  public String getFlowName() {
+    return getFlowConstruct().getName();
   }
 
   @Override

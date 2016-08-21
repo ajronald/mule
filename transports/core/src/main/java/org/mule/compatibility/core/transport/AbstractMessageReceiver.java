@@ -10,7 +10,6 @@ import static org.mule.runtime.core.DefaultMessageExecutionContext.create;
 import static org.mule.runtime.core.DefaultMuleEvent.setCurrentEvent;
 import static org.mule.runtime.core.api.config.MuleProperties.MULE_REMOTE_SYNC_PROPERTY;
 import static org.mule.runtime.core.api.config.MuleProperties.MULE_REPLY_TO_PROPERTY;
-import static org.mule.runtime.core.api.config.MuleProperties.MULE_ROOT_MESSAGE_ID_PROPERTY;
 import static org.mule.runtime.core.api.config.MuleProperties.OBJECT_DEFAULT_MESSAGE_PROCESSING_MANAGER;
 import static org.mule.runtime.core.context.notification.ConnectorMessageNotification.MESSAGE_RESPONSE;
 
@@ -433,7 +432,7 @@ public abstract class AbstractMessageReceiver extends AbstractTransportMessageHa
       if (connector.isEnableMessageEvents(endpoint.getMuleContext())) {
         connector.fireNotification(new EndpointMessageNotification(resultEvent.getMessage(),
                                                                    endpoint,
-                                                                   resultEvent.getFlowConstruct(),
+                                                                   flowConstruct,
                                                                    MESSAGE_RESPONSE));
       }
     }
