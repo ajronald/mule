@@ -43,7 +43,7 @@ public class VMFunctionalTestCase extends FunctionalTestCase {
   public void testSingleMessage() throws Exception {
     MuleClient client = muleContext.getClient();
     client.dispatch("vm://in", "Marco", null);
-    MuleMessage response = client.request("vm://out", RECEIVE_TIMEOUT);
+    MuleMessage response = client.request("vm://out", RECEIVE_TIMEOUT).getRight();
     assertNotNull("Response is null", response);
     assertEquals("Polo", response.getPayload());
   }
@@ -52,7 +52,7 @@ public class VMFunctionalTestCase extends FunctionalTestCase {
   public void testRequest() throws Exception {
     MuleClient client = muleContext.getClient();
     client.dispatch("vm://in", "Marco", null);
-    MuleMessage response = client.request("vm://out", RECEIVE_TIMEOUT);
+    MuleMessage response = client.request("vm://out", RECEIVE_TIMEOUT).getRight();
     assertNotNull("Response is null", response);
     assertEquals("Polo", response.getPayload());
   }
@@ -65,12 +65,12 @@ public class VMFunctionalTestCase extends FunctionalTestCase {
     client.dispatch("vm://in", "Marco", null);
     MuleMessage response;
     for (int i = 0; i < 3; ++i) {
-      response = client.request("vm://out", RECEIVE_TIMEOUT);
+      response = client.request("vm://out", RECEIVE_TIMEOUT).getRight();
       assertNotNull("Response is null", response);
       assertEquals("Polo", response.getPayload());
     }
 
-    MuleMessage secondMessage = client.request("vm://out", RECEIVE_TIMEOUT);
+    MuleMessage secondMessage = client.request("vm://out", RECEIVE_TIMEOUT).getRight();
     assertNull(secondMessage);
   }
 
@@ -78,7 +78,7 @@ public class VMFunctionalTestCase extends FunctionalTestCase {
   public void testOneWayChain() throws Exception {
     MuleClient client = muleContext.getClient();
     client.dispatch("vm://in1", "Marco", null);
-    MuleMessage response = client.request("vm://out1", RECEIVE_TIMEOUT);
+    MuleMessage response = client.request("vm://out1", RECEIVE_TIMEOUT).getRight();
     assertNotNull("Response is null", response);
     assertEquals("Polo", response.getPayload());
     assertTrue(CustomObjectStore.count > 0); // ensure custom store was used
@@ -87,7 +87,7 @@ public class VMFunctionalTestCase extends FunctionalTestCase {
   @Test
   public void testRequestResponseChain() throws Exception {
     MuleClient client = muleContext.getClient();
-    MuleMessage response = client.send("vm://in2", "Marco", null);
+    MuleMessage response = client.send("vm://in2", "Marco", null).getRight();
     assertNotNull("Response is null", response);
     assertEquals("Polo", response.getPayload());
   }
@@ -96,10 +96,10 @@ public class VMFunctionalTestCase extends FunctionalTestCase {
   public void testNoMessageDuplication() throws Exception {
     MuleClient client = muleContext.getClient();
     client.dispatch("vm://in", "Marco", null);
-    MuleMessage response = client.request("vm://out", RECEIVE_TIMEOUT);
+    MuleMessage response = client.request("vm://out", RECEIVE_TIMEOUT).getRight();
     assertNotNull("Response is null", response);
     assertEquals("Polo", response.getPayload());
-    MuleMessage secondMessage = client.request("vm://out", RECEIVE_TIMEOUT);
+    MuleMessage secondMessage = client.request("vm://out", RECEIVE_TIMEOUT).getRight();
     assertNull(secondMessage);
   }
 

@@ -40,7 +40,7 @@ public class TcpLengthFunctionalTestCase extends FunctionalTestCase {
   @Test
   public void testSend() throws Exception {
     MuleClient client = muleContext.getClient();
-    MuleMessage result = client.send("clientEndpoint", TEST_MESSAGE, null);
+    MuleMessage result = client.send("clientEndpoint", TEST_MESSAGE, null).getRight();
     assertEquals(TEST_MESSAGE + " Received", getPayloadAsString(result));
   }
 
@@ -50,7 +50,7 @@ public class TcpLengthFunctionalTestCase extends FunctionalTestCase {
     client.dispatch("asyncClientEndpoint2", TEST_MESSAGE, null);
     // MULE-2754
     Thread.sleep(200);
-    MuleMessage result = client.request("asyncClientEndpoint2", timeout);
+    MuleMessage result = client.request("asyncClientEndpoint2", timeout).getRight();
     // expect failure - TCP simply can't work like this
     assertNull(result);
   }

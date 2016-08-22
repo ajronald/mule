@@ -51,7 +51,7 @@ public class PersistentBoundedQueueTestCase extends FunctionalTestCase {
     assertTrue(results.contains("Test2"));
 
     Thread.sleep(SLEEP);
-    MuleMessage result = client.request("vm://out", RECEIVE_TIMEOUT);
+    MuleMessage result = client.request("vm://out", RECEIVE_TIMEOUT).getRight();
     if (result != null) {
       System.out.println("result = " + getPayloadAsString(result));
     }
@@ -59,7 +59,7 @@ public class PersistentBoundedQueueTestCase extends FunctionalTestCase {
   }
 
   private void pollOutQueue(MuleClient client, Set<String> results) throws Exception {
-    MuleMessage result = client.request("vm://out", RECEIVE_TIMEOUT);
+    MuleMessage result = client.request("vm://out", RECEIVE_TIMEOUT).getRight();
     assertNotNull(result);
     results.add(getPayloadAsString(result));
   }

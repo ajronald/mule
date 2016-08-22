@@ -9,6 +9,7 @@ package org.mule.runtime.module.pgp;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import org.mule.runtime.api.message.Error;
 import org.mule.runtime.core.api.ExceptionPayload;
 import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.MuleException;
@@ -36,7 +37,7 @@ public class PGPExpiredIntegrationTestCase extends FunctionalTestCase {
 
     flowRunner("pgpEncryptProcessor").withPayload(payload).asynchronously().run();
 
-    MuleMessage message = client.request("test://out", 5000);
+    MuleMessage message = client.request("test://out", 5000).getRight();
     assertNull(message);
 
     assertNotNull("flow's exception strategy should have caught an exception", exceptionFromFlow);
@@ -49,8 +50,8 @@ public class PGPExpiredIntegrationTestCase extends FunctionalTestCase {
 
     @Override
     public MuleEvent process(MuleEvent event) throws MuleException {
-      ExceptionPayload exceptionPayload = event.getMessage().getExceptionPayload();
-      exceptionFromFlow = exceptionPayload.getException();
+      Error error = event.getError();
+      exceptionFromFlow = error.getException();
 
       return null;
     }

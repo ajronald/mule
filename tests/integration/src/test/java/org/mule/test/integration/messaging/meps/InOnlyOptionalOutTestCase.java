@@ -30,11 +30,11 @@ public class InOnlyOptionalOutTestCase extends AbstractIntegrationTestCase {
     flowRunner("In-Only_Optional-Out--Service").withPayload("some data").asynchronously().run();
     flowRunner("In-Only_Optional-Out--Service").withPayload("some data").withInboundProperty("foo", "bar").asynchronously().run();
 
-    MuleMessage result = client.request("test://received", RECEIVE_TIMEOUT);
+    MuleMessage result = client.request("test://received", RECEIVE_TIMEOUT).getRight();
     assertNotNull(result);
     assertThat(getPayloadAsString(result), is("foo header received"));
 
-    result = client.request("test://notReceived", RECEIVE_TIMEOUT);
+    result = client.request("test://notReceived", RECEIVE_TIMEOUT).getRight();
     assertNull(result);
   }
 }

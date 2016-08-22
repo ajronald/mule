@@ -300,7 +300,7 @@ public class ExternalTransactionTestCase extends AbstractExternalTransactionTest
     client.send("vm://entry?connector=vm-normal", "OK", null);
     tm.commit();
 
-    MuleMessage response = client.request("queue2", WAIT);
+    MuleMessage response = client.request("queue2", WAIT).getRight();
     assertNull("Response is not null", response);
 
     // This will fail, since there will be no transaction to join

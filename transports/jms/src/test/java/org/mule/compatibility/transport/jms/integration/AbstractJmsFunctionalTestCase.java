@@ -422,19 +422,17 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase {
   }
 
   protected MuleMessage receiveMessage(Object expected) throws Exception {
-    MuleMessage result = client.request(getOutboundEndpoint(), getTimeout());
+    MuleMessage result = client.request(getOutboundEndpoint(), getTimeout()).getRight();
     assertNotNull(result);
     assertNotNull(result.getPayload());
-    assertNull(result.getExceptionPayload());
     assertEquals(expected, result.getPayload());
     return result;
   }
 
   protected MuleMessage receiveMessage(byte[] expected) throws Exception {
-    MuleMessage result = client.request(getOutboundEndpoint(), getTimeout());
+    MuleMessage result = client.request(getOutboundEndpoint(), getTimeout()).getRight();
     assertNotNull(result);
     assertNotNull(result.getPayload());
-    assertNull(result.getExceptionPayload());
     byte[] bytes = getPayloadAsBytes(result);
     assertEquals("Wrong number of bytes", expected.length, bytes.length);
     for (int i = 0; i < expected.length; ++i) {
@@ -446,7 +444,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase {
   public void runAsynchronousDispatching() throws Exception {
     dispatchMessage();
     receiveMessage();
-    MuleMessage result = client.request(getOutboundEndpoint(), getSmallTimeout());
+    MuleMessage result = client.request(getOutboundEndpoint(), getSmallTimeout()).getRight();
     assertNull(result);
   }
 
