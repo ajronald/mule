@@ -177,7 +177,7 @@ public class RollbackExceptionStrategyTestCase extends FunctionalTestCase {
       fail("message should have been delivered at least 5 times");
     }
     assertThat(deliveredTimes.intValue(), is(EXPECTED_DELIVERED_TIMES));
-    MuleMessage dlqMessage = client.request("jms://dlq?connector=activeMq", TIMEOUT);
+    MuleMessage dlqMessage = client.request("jms://dlq?connector=activeMq", TIMEOUT).getRight();
     assertThat(dlqMessage, IsNull.<Object>notNullValue());
     assertThat(getPayloadAsString(dlqMessage), is(MESSAGE_EXPECTED));
   }
@@ -187,7 +187,8 @@ public class RollbackExceptionStrategyTestCase extends FunctionalTestCase {
     MuleClient client = muleContext.getClient();
     MuleMessage response =
         client.send(String.format("http://localhost:%s", dynamicPort1.getNumber()), getTestMuleMessage(JSON_REQUEST),
-                    newOptions().disableStatusCodeValidation().responseTimeout(TIMEOUT).build());
+                    newOptions().disableStatusCodeValidation().responseTimeout(TIMEOUT).build())
+            .getRight();
     assertThat(response.<Integer>getInboundProperty(HTTP_STATUS_PROPERTY), is(500));
   }
 
@@ -246,7 +247,7 @@ public class RollbackExceptionStrategyTestCase extends FunctionalTestCase {
       Error error = client.send("vm://in2", MESSAGE, null, TIMEOUT).getLeft();
       assertThat(getPayloadAsString(result), is(MESSAGE + " apt1 apt2 apt3"));
     }
-    result = client.send("vm://in2", MESSAGE, null, TIMEOUT);
+    result = client.send("vm://in2", MESSAGE, null, TIMEOUT).getRight();
     assertThat(result, IsNull.<Object>notNullValue());
     assertThat(getPayloadAsString(result), is(MESSAGE + " apt4 apt5"));
   }

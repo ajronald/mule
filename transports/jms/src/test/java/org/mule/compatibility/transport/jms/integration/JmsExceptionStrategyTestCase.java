@@ -65,7 +65,7 @@ public class JmsExceptionStrategyTestCase extends AbstractJmsFunctionalTestCase 
     flow.stop();
     // Check message rollback
     // Seems not to be a rollback
-    MuleMessage muleMessage = muleClient.request("jms://in", TIMEOUT);
+    MuleMessage muleMessage = muleClient.request("jms://in", TIMEOUT).getRight();
     assertThat(muleMessage, IsNull.<Object>notNullValue());
     // This is currently expected
     /*
@@ -73,7 +73,7 @@ public class JmsExceptionStrategyTestCase extends AbstractJmsFunctionalTestCase 
      */
 
     // Check outbound-endpoint was not executed
-    MuleMessage outboundMessage = muleClient.request("jms://out", SHORT_TIMEOUT);
+    MuleMessage outboundMessage = muleClient.request("jms://out", SHORT_TIMEOUT).getRight();
     assertThat(outboundMessage, IsNull.<Object>nullValue());
   }
 
@@ -86,11 +86,11 @@ public class JmsExceptionStrategyTestCase extends AbstractJmsFunctionalTestCase 
     Flow flow = muleContext.getRegistry().get("flowWithoutExceptionStrategyAndNoTx");
     flow.stop();
     // Check message was no consumed
-    MuleMessage muleMessage = muleClient.request("jms://in2", TIMEOUT);
+    MuleMessage muleMessage = muleClient.request("jms://in2", TIMEOUT).getRight();
     assertThat(muleMessage, IsNull.<Object>notNullValue());
 
     // Check outbound-endpoint was not executed
-    MuleMessage outboundMessage = muleClient.request("jms://out2", SHORT_TIMEOUT);
+    MuleMessage outboundMessage = muleClient.request("jms://out2", SHORT_TIMEOUT).getRight();
     assertThat(outboundMessage, IsNull.<Object>nullValue());
   }
 
@@ -103,11 +103,11 @@ public class JmsExceptionStrategyTestCase extends AbstractJmsFunctionalTestCase 
     Flow flow = muleContext.getRegistry().get("flowWithDefaultStrategyConfigured");
     flow.stop();
     // Check message was no consumed
-    MuleMessage muleMessage = muleClient.request("jms://in3", TIMEOUT);
+    MuleMessage muleMessage = muleClient.request("jms://in3", TIMEOUT).getRight();
     assertThat(muleMessage, IsNull.<Object>notNullValue());
 
     // Check outbound-endpoint was not executed
-    MuleMessage outboundMessage = muleClient.request("jms://out3", SHORT_TIMEOUT);
+    MuleMessage outboundMessage = muleClient.request("jms://out3", SHORT_TIMEOUT).getRight();
     assertThat(outboundMessage, IsNull.<Object>nullValue());
   }
 
@@ -120,16 +120,16 @@ public class JmsExceptionStrategyTestCase extends AbstractJmsFunctionalTestCase 
     Flow flow = muleContext.getRegistry().get("flowWithExceptionNotification");
     flow.stop();
     // Check message was no consumed
-    MuleMessage muleMessage = muleClient.request("jms://in4", TIMEOUT);
+    MuleMessage muleMessage = muleClient.request("jms://in4", TIMEOUT).getRight();
     assertThat(muleMessage, IsNull.<Object>notNullValue());
 
     // Check exception notification was sent
-    MuleMessage exceptionMessage = muleClient.request("jms://exception4", TIMEOUT);
+    MuleMessage exceptionMessage = muleClient.request("jms://exception4", TIMEOUT).getRight();
     assertThat(exceptionMessage, IsNull.<Object>notNullValue());
     assertThat(exceptionMessage.getPayload(), IsNull.<Object>notNullValue());
 
     // Check outbound-endpoint was not executed
-    MuleMessage outboundMessage = muleClient.request("jms://out4", SHORT_TIMEOUT);
+    MuleMessage outboundMessage = muleClient.request("jms://out4", SHORT_TIMEOUT).getRight();
     assertThat(outboundMessage, IsNull.<Object>nullValue());
   }
 
@@ -142,16 +142,16 @@ public class JmsExceptionStrategyTestCase extends AbstractJmsFunctionalTestCase 
     Flow flow = muleContext.getRegistry().get("flowConfiguredForDeadLetterQueue");
     flow.stop();
     // Check message was no consumed
-    MuleMessage muleMessage = muleClient.request("jms://in5", TIMEOUT);
+    MuleMessage muleMessage = muleClient.request("jms://in5", TIMEOUT).getRight();
     assertThat(muleMessage, IsNull.<Object>nullValue());
 
     // Check exception notification was sent
-    MuleMessage deadLetter = muleClient.request("jms://DLQ5", TIMEOUT);
+    MuleMessage deadLetter = muleClient.request("jms://DLQ5", TIMEOUT).getRight();
     assertThat(deadLetter, IsNull.<Object>notNullValue());
     assertThat(deadLetter.getPayload(), IsNull.<Object>notNullValue());
 
     // Check outbound-endpoint was not executed
-    MuleMessage outboundMessage = muleClient.request("jms://out5", SHORT_TIMEOUT);
+    MuleMessage outboundMessage = muleClient.request("jms://out5", SHORT_TIMEOUT).getRight();
     assertThat(outboundMessage, IsNull.<Object>nullValue());
   }
 
@@ -164,16 +164,16 @@ public class JmsExceptionStrategyTestCase extends AbstractJmsFunctionalTestCase 
     Flow flow = muleContext.getRegistry().get("flowConfiguredForDeadLetterQueueTx");
     flow.stop();
     // Check message was no consumed
-    MuleMessage muleMessage = muleClient.request("jms://in6", TIMEOUT);
+    MuleMessage muleMessage = muleClient.request("jms://in6", TIMEOUT).getRight();
     assertThat(muleMessage, IsNull.<Object>nullValue());
 
     // Check exception notification was sent
-    MuleMessage deadLetter = muleClient.request("jms://DLQ6", TIMEOUT);
+    MuleMessage deadLetter = muleClient.request("jms://DLQ6", TIMEOUT).getRight();
     assertThat(deadLetter, IsNull.<Object>notNullValue());
     assertThat(deadLetter.getPayload(), IsNull.<Object>notNullValue());
 
     // Check outbound-endpoint was not executed
-    MuleMessage outboundMessage = muleClient.request("jms://out6", SHORT_TIMEOUT);
+    MuleMessage outboundMessage = muleClient.request("jms://out6", SHORT_TIMEOUT).getRight();
     assertThat(outboundMessage, IsNull.<Object>nullValue());
   }
 

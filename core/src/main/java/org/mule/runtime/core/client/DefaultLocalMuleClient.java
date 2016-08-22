@@ -157,10 +157,13 @@ public class DefaultLocalMuleClient implements MuleClient {
     if (connectorMessageProcessor != null) {
       final MuleEvent event =
           connectorMessageProcessor.process(createOneWayMuleEvent(MuleMessage.builder().nullPayload().build()));
+      if (event == null || event instanceof VoidMuleEvent) {
+        return right(null);
+      }
       if (event.getError() != null) {
         return left(event.getError());
       }
-      return event == null || event instanceof VoidMuleEvent ? null : right(event.getMessage());
+      return right(event.getMessage());
     } else {
       return right(null);
     }

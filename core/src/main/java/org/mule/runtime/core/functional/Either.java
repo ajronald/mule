@@ -6,20 +6,19 @@
  */
 package org.mule.runtime.core.functional;
 
-import org.mule.runtime.api.message.Error;
-
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 final public class Either<L, R> {
 
+  //TODO review if optional can be null and if client should return Optional<MuleMessage>
   public static <L, R> Either<L, R> left(L value) {
-    return new Either<>(Optional.of(value), Optional.empty());
+    return new Either<>(Optional.ofNullable(value), Optional.empty());
   }
 
   public static <L, R> Either<L, R> right(R value) {
-    return new Either<>(Optional.empty(), Optional.of(value));
+    return new Either<>(Optional.empty(), Optional.ofNullable(value));
   }
 
   private final Optional<L> left;

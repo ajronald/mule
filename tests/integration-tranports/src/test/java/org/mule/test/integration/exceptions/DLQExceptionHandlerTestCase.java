@@ -30,11 +30,11 @@ public class DLQExceptionHandlerTestCase extends FunctionalTestCase {
     MuleClient client = muleContext.getClient();
     client.dispatch("jms://request.queue", "testing 1 2 3", null);
 
-    MuleMessage message = client.request("jms://out.queue", 3000);
+    MuleMessage message = client.request("jms://out.queue", 3000).getRight();
     assertNull(message);
 
     try {
-      message = client.request("jms://DLQ", 20000);
+      message = client.request("jms://DLQ", 20000).getRight();
     } catch (MuleException e) {
       e.printStackTrace(System.err);
     }

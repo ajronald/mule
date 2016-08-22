@@ -67,7 +67,7 @@ public class ExceptionStrategyExceptionPatternTestCase extends FunctionalTestCas
     if (!exceptionLatch.await(TIMEOUT, TimeUnit.MILLISECONDS)) {
       fail("exception should be thrown");
     }
-    MuleMessage muleMessage = client.request("jms://out", TIMEOUT);
+    MuleMessage muleMessage = client.request("jms://out", TIMEOUT).getRight();
     assertThat(muleMessage, IsNull.notNullValue());
   }
 
@@ -80,7 +80,7 @@ public class ExceptionStrategyExceptionPatternTestCase extends FunctionalTestCas
     if (!exceptionLatch.await(TIMEOUT, TimeUnit.MILLISECONDS)) {
       fail("exception should be thrown");
     }
-    MuleMessage muleMessage = client.request("jms://out", TIMEOUT);
+    MuleMessage muleMessage = client.request("jms://out", TIMEOUT).getRight();
     assertThat(muleMessage, IsNull.nullValue());
   }
 }

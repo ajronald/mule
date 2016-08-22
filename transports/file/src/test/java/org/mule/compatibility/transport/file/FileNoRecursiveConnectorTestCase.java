@@ -36,7 +36,7 @@ public class FileNoRecursiveConnectorTestCase extends FunctionalTestCase {
   public void findsInRootDirectoryOnly() throws Exception {
     MuleClient client = muleContext.getClient();
 
-    MuleMessage result = client.request("vm://testOut", RECEIVE_TIMEOUT);
+    MuleMessage result = client.request("vm://testOut", RECEIVE_TIMEOUT).getRight();
 
     assertNull("Found a file from a sub directory", result);
   }

@@ -34,7 +34,7 @@ public class RecursiveWorkDirectoryTestCase extends FunctionalTestCase {
   public void ignoresWorkDirectoryOnRequest() throws Exception {
     MuleClient client = muleContext.getClient();
 
-    MuleMessage response = client.request("file://" + temporaryFolder.getRoot(), RECEIVE_TIMEOUT);
+    MuleMessage response = client.request("file://" + temporaryFolder.getRoot(), RECEIVE_TIMEOUT).getRight();
 
     assertThat(response, is(nullValue()));
   }

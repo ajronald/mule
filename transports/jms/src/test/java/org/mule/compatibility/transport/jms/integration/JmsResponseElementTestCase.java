@@ -54,7 +54,7 @@ public class JmsResponseElementTestCase extends FunctionalTestCase {
 
     MuleMessage response = client.request(replyToUri, TIMEOUT).getRight();
     assertThat(getPayloadAsString(response), is(EXPECTED_MODIFIED_MESSAGE));
-    response = client.request(replyToUri, TINY_TIMEOUT);
+    response = client.request(replyToUri, TINY_TIMEOUT).getRight();
     assertThat(response, IsNull.<Object>nullValue());
   }
 

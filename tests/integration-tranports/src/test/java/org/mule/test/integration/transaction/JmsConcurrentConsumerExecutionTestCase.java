@@ -56,9 +56,9 @@ public class JmsConcurrentConsumerExecutionTestCase extends FunctionalTestCase {
     }
     Flow flowWithTxConfigured = (Flow) getFlowConstruct("flowWithTxConfigured");
     flowWithTxConfigured.stop();
-    MuleMessage muleMessage = muleClient.request("jms://in", TIMEOUT);
+    MuleMessage muleMessage = muleClient.request("jms://in", TIMEOUT).getRight();
     assertThat(muleMessage, IsNull.<Object>notNullValue());
-    muleMessage = muleClient.request("jms://in", TIMEOUT);
+    muleMessage = muleClient.request("jms://in", TIMEOUT).getRight();
     assertThat(muleMessage, IsNull.<Object>nullValue());
   }
 
