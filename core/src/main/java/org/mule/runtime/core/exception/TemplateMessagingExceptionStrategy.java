@@ -6,6 +6,8 @@
  */
 package org.mule.runtime.core.exception;
 
+import static org.mule.runtime.core.context.notification.ExceptionStrategyNotification.PROCESS_START;
+
 import org.mule.runtime.core.DefaultMuleEvent;
 import org.mule.runtime.core.VoidMuleEvent;
 import org.mule.runtime.core.api.MessagingException;
@@ -39,7 +41,7 @@ public abstract class TemplateMessagingExceptionStrategy extends AbstractExcepti
   @Override
   final public MuleEvent handleException(Exception exception, MuleEvent event) {
     try {
-      return new ExceptionMessageProcessor(exception, muleContext, event.getFlowConstruct()).process(event);
+      return new ExceptionMessageProcessor(exception, muleContext, flowConstruct).process(event);
     } catch (MuleException e) {
       throw new RuntimeException(e);
     }
@@ -60,8 +62,7 @@ public abstract class TemplateMessagingExceptionStrategy extends AbstractExcepti
       if (!handleException && request.getReplyToHandler() instanceof NonBlockingReplyToHandler) {
         request = new DefaultMuleEvent(request, request.getFlowConstruct(), null, null, true);
       }
-      muleContext.getNotificationManager()
-          .fireNotification(new ExceptionStrategyNotification(request, ExceptionStrategyNotification.PROCESS_START));
+      muleContext.getNotificationManager().fireNotification(new ExceptionStrategyNotification(request, PROCESS_START));
       fireNotification(exception);
       logException(exception, request);
       processStatistics(request);
@@ -74,7 +75,7 @@ public abstract class TemplateMessagingExceptionStrategy extends AbstractExcepti
 
     @Override
     protected MuleEvent processResponse(MuleEvent response, MuleEvent request) throws MuleException {
-      processOutboundRouterStatistics(flowConstruct);
+      processOutboundRouterStatistics();
       response = afterRouting(exception, response);
       if (response != null && !VoidMuleEvent.getInstance().equals(response)) {
         // Only process reply-to if non-blocking is not enabled. Checking the exchange pattern is not sufficient
@@ -141,7 +142,7 @@ public abstract class TemplateMessagingExceptionStrategy extends AbstractExcepti
   }
 
   private void processStatistics(MuleEvent event) {
-    FlowConstructStatistics statistics = event.getFlowConstruct().getStatistics();
+    FlowConstructStatistics statistics = flowConstruct.getStatistics();
     if (statistics != null && statistics.isEnabled()) {
       statistics.incExecutionError();
     }
@@ -165,7 +166,7 @@ public abstract class TemplateMessagingExceptionStrategy extends AbstractExcepti
   protected void doInitialise(MuleContext muleContext) throws InitialisationException {
     super.doInitialise(muleContext);
     DefaultMessageProcessorChainBuilder defaultMessageProcessorChainBuilder =
-        new DefaultMessageProcessorChainBuilder(this.flowConstruct);
+        new DefaultMessageProcessorChainBuilder(flowConstruct);
     try {
       configuredMessageProcessors = defaultMessageProcessorChainBuilder.chain(getMessageProcessors()).build();
     } catch (MuleException e) {
@@ -185,7 +186,7 @@ public abstract class TemplateMessagingExceptionStrategy extends AbstractExcepti
 
   /**
    * Determines if the exception strategy should process or not a message inside a choice exception strategy.
-   *
+   * <p>
    * Useful for exception strategies which ALWAYS must accept certain types of events despite when condition is not true.
    *
    * @param event The MuleEvent being processed
